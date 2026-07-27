@@ -48,15 +48,27 @@
   <section class="section-light" style="padding-top: 20px;">
     <div class="container product-layout">
 
-      <div class="product-image">
-        <svg width="260" height="300" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" aria-label="Camisa oficial Fúria Flecha 2026">
-          <path d="M55 10 L20 55 L45 78 L55 68 L55 250 L165 250 L165 68 L175 78 L200 55 L165 10 L140 25 Q110 40 80 25 Z"
-                fill="#fb7a2a" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
-          <text x="110" y="165" text-anchor="middle" font-family="'Creato Display', sans-serif" font-weight="800" font-size="54" fill="#0b1220">FF</text>
-        </svg>
+      <div class="product-gallery">
+        <div class="product-image">
+          <img id="product-main-image" src="src/images/loja/camisa-frente.png" alt="Camisa oficial Fúria Flecha 2026 — frente">
+        </div>
+        <div class="product-thumbs" role="group" aria-label="Selecionar foto do produto">
+          <button type="button" class="thumb active" data-image="src/images/loja/camisa-frente.png" data-alt="Camisa oficial Fúria Flecha 2026 — frente" aria-label="Ver camisa — frente">
+            <img src="src/images/loja/camisa-frente.png" alt="">
+          </button>
+          <button type="button" class="thumb" data-image="src/images/loja/camisa-verso.jpg" data-alt="Camisa oficial Fúria Flecha 2026 — verso" aria-label="Ver camisa — verso">
+            <img src="src/images/loja/camisa-verso.jpg" alt="">
+          </button>
+          <button type="button" class="thumb" data-image="src/images/loja/modelo-camisa-frente.png" data-alt="Camisa oficial Fúria Flecha 2026 vestida — frente" aria-label="Ver camisa vestida — frente">
+            <img src="src/images/loja/modelo-camisa-frente.png" alt="">
+          </button>
+          <button type="button" class="thumb" data-image="src/images/loja/modelo-camisa-costas.png" data-alt="Camisa oficial Fúria Flecha 2026 vestida — costas" aria-label="Ver camisa vestida — costas">
+            <img src="src/images/loja/modelo-camisa-costas.png" alt="">
+          </button>
+        </div>
       </div>
 
-      <div>
+      <div style="margin-bottom: 25px;">
         <span class="tag">Camisa Oficial</span>
         <h1 style="font-size:2.1rem; margin-bottom:6px;">Camisa Fúria Flecha 2026</h1>
         <p class="price">R$ 149,90</p>
@@ -80,7 +92,6 @@
         <div>
           <button type="button" class="btn btn-primary" data-add-to-cart>Adicionar ao Carrinho</button>
         </div>
-        <p class="form-note">Protótipo de interface — sem checkout real integrado.</p>
       </div>
 
     </div>

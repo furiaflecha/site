@@ -38,6 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Galeria de fotos do produto (loja)
+  const mainImage = document.querySelector('#product-main-image');
+  const thumbs = document.querySelectorAll('.thumb');
+  if (mainImage && thumbs.length) {
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        thumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        mainImage.src = thumb.dataset.image;
+        mainImage.alt = thumb.dataset.alt;
+      });
+    });
+  }
+
   // Contador de quantidade (loja)
   const qtyValue = document.querySelector('[data-qty-value]');
   const minus = document.querySelector('[data-qty-minus]');
