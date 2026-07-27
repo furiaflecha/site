@@ -142,10 +142,10 @@ ul{ margin: 0; padding: 0; list-style: none; }
 .brand{
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   font-family: var(--font-brand);
   font-weight: 800;
-  font-size: 1.25rem;
+  font-size: 1.85rem;
   color: #fff;
   white-space: nowrap;
 }
@@ -155,8 +155,8 @@ ul{ margin: 0; padding: 0; list-style: none; }
 .brand-text{ display: flex; flex-direction: column; line-height: 1; }
 
 .brand-eyebrow{
-  font-size: 0.62rem;
-  font-weight: 600;
+  font-size: 0.90rem;
+  font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted-on-dark);
