@@ -1,10 +1,45 @@
 /* ============================================================
    FÚRIA FLECHA — Design tokens
-   Navy escuro + laranja + azul, tipografia Sora/Inter, cantos
-   arredondados largos, motivo visual: arco e flecha.
+   Navy escuro + laranja + azul, tipografia Creato Display/Louis
+   George Cafe (Mulan no logotipo), cantos arredondados largos,
+   motivo visual: arco e flecha.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@font-face{
+  font-family: 'Creato Display';
+  src: url('fonts/CreatoDisplay-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Creato Display';
+  src: url('fonts/CreatoDisplay-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Louis George Cafe';
+  src: url('fonts/LouisGeorgeCafe-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Louis George Cafe';
+  src: url('fonts/LouisGeorgeCafe-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Mulan';
+  src: url('fonts/Mulan.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root{
   --navy-950: #0a0f1c;
@@ -28,8 +63,9 @@
   --radius-lg: 24px;
   --radius-pill: 999px;
 
-  --font-display: 'Sora', 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Creato Display', sans-serif;
+  --font-body: 'Louis George Cafe', sans-serif;
+  --font-brand: 'Mulan', var(--font-display);
 
   --shadow-card: 0 20px 40px -20px rgba(10, 15, 28, 0.35);
 }
@@ -107,7 +143,7 @@ ul{ margin: 0; padding: 0; list-style: none; }
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-weight: 800;
   font-size: 1.25rem;
   color: #fff;
@@ -115,6 +151,19 @@ ul{ margin: 0; padding: 0; list-style: none; }
 }
 
 .brand .accent{ color: var(--orange-500); }
+
+.brand-text{ display: flex; flex-direction: column; line-height: 1; }
+
+.brand-eyebrow{
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-on-dark);
+  margin-bottom: 2px;
+}
+
+.brand-name{ display: block; }
 
 .brand-mark{
   width: 44px;
@@ -257,12 +306,37 @@ ul{ margin: 0; padding: 0; list-style: none; }
 
 .hero-emblem{
   position: relative;
+  width: 100%;
   aspect-ratio: 1;
   max-width: 480px;
   margin: 0 auto;
 }
 
-.hero-emblem svg{ width: 100%; height: 100%; }
+.hero-emblem-rings{ position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.hero-emblem-photo{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--navy-800);
+}
+
+.hero-emblem-photo img{ width: 100%; height: 100%; object-fit: contain; }
+
+.hero-photo-col{ display: flex; flex-direction: column; gap: 28px; }
+
+.hero-photo-torcida{
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  display: block;
+}
 
 .ring-spin{
   animation: spin 40s linear infinite;
@@ -375,7 +449,7 @@ ul{ margin: 0; padding: 0; list-style: none; }
 /* ---------- Página interna: hero de título ---------- */
 .page-hero{
   background: linear-gradient(120deg, var(--navy-900), var(--navy-800));
-  padding: 52px 0 44px;
+  padding: 52px 0 24px;
   color: #fff;
 }
 
@@ -388,6 +462,19 @@ ul{ margin: 0; padding: 0; list-style: none; }
 
 .page-hero h1{ font-size: clamp(2rem, 4vw, 2.7rem); color: #fff; }
 
+.page-hero.has-visual .container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-hero-visual{
+  height: 96px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* ---------- Quem Somos ---------- */
 .about-grid{
   display: grid;
@@ -396,10 +483,21 @@ ul{ margin: 0; padding: 0; list-style: none; }
   align-items: start;
 }
 
-.about-grid p{
+.about-grid p, .prose p{
   color: var(--muted-on-light);
   line-height: 1.75;
   font-size: 1.03rem;
+  margin-bottom: 20px;
+}
+.prose{ max-width: 68ch; }
+.prose p:last-child{ margin-bottom: 0; }
+
+.section-lead{
+  color: var(--muted-on-light);
+  font-size: 1.03rem;
+  line-height: 1.6;
+  max-width: 68ch;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -413,6 +511,8 @@ ul{ margin: 0; padding: 0; list-style: none; }
   justify-content: center;
   min-height: 260px;
 }
+
+.about-figure img{ max-width: 100%; height: auto; border-radius: var(--radius-md); }
 
 .values-list{
   margin-top: 12px;
@@ -503,6 +603,32 @@ ul{ margin: 0; padding: 0; list-style: none; }
 .match-card h3{ font-size: 1.05rem; margin-bottom: 4px; }
 .match-card .venue{ color: var(--muted-on-light); font-size: 0.9rem; }
 .match-card .venue .loc-tag{ font-weight: 700; color: var(--ink); }
+
+.team-badge{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.round-label{
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted-on-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.venue-link{
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--paper-dim);
+  text-underline-offset: 3px;
+}
+.venue-link:hover{ color: var(--blue-400); text-decoration-color: var(--blue-400); }
 
 .match-card-right{ display: flex; align-items: center; gap: 18px; }
 .match-time{ font-weight: 700; }
@@ -668,6 +794,10 @@ ul{ margin: 0; padding: 0; list-style: none; }
   .about-grid{ grid-template-columns: 1fr; }
   .product-layout{ grid-template-columns: 1fr; }
   .footer-top{ flex-direction: column; }
+}
+
+@media (max-width: 600px){
+  .page-hero.has-visual .container{ flex-direction: column; align-items: flex-start; gap: 12px; }
 }
 
 @media (max-width: 760px){
