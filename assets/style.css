@@ -509,10 +509,10 @@ ul{ margin: 0; padding: 0; list-style: none; }
 }
 
 .about-figure{
-  background: #fff;
-  border: 1px dashed #cfd6e6;
-  border-radius: var(--radius-lg);
-  padding: 48px;
+  /*background: #fff;
+  /* border: 1px dashed #cfd6e6;*/
+  /*border-radius: var(--radius-lg);*/
+  padding: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
