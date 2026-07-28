@@ -521,6 +521,16 @@ ul{ margin: 0; padding: 0; list-style: none; }
 
 .about-figure img{ max-width: 100%; height: auto; border-radius: var(--radius-md); }
 
+.diferencial-grid{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.comments-col{ display: flex; flex-direction: column; gap: 16px; }
+.comments-col img{ width: 100%; border-radius: var(--radius-md); display: block; }
+
 .values-list{
   margin-top: 12px;
   display: grid;
@@ -907,6 +917,7 @@ ul{ margin: 0; padding: 0; list-style: none; }
   .hero-emblem{ max-width: 320px; order: -1; }
   .shop-split{ grid-template-columns: 1fr; }
   .about-grid{ grid-template-columns: 1fr; }
+  .diferencial-grid{ grid-template-columns: 1fr; }
   .product-layout{ grid-template-columns: 1fr; }
   .footer-top{ flex-direction: column; }
 }

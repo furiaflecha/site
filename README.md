@@ -50,12 +50,18 @@ Não use dados fictícios em checkout de produção e não faça teste com dinhe
 ## Segurança e limitações do MVP
 
 - O pedido recebe UUID e é persistido antes da chamada à InfinitePay.
+- Cada pedido recebe um segredo de webhook de 256 bits. A InfinitePay recebe esse segredo apenas na URL do callback e o banco guarda somente seu hash; callbacks sem o segredo correto são rejeitados com comparação resistente a timing attacks.
+- Cada tentativa de checkout recebe uma chave idempotente: cliques repetidos ou respostas de rede perdidas reutilizam o mesmo pedido, em vez de criar cobranças duplicadas.
 - O webhook exige `order_nsu` existente, transação informada e valor idêntico ao total salvo.
+- Uma transação confirmada é reivindicada para um único pedido, reduzindo ataques de replay entre pedidos.
 - Reenvios são idempotentes: um pedido já pago não é confirmado novamente.
 - Apenas webhook ou `payment_check` podem marcar o pedido como pago.
+- Criação de pedidos, consulta e fallback possuem rate limiting nativo na borda da Netlify, validação de origem e tamanho máximo de payload. O limite é aplicado antes de executar código ou acessar armazenamento.
+- A Netlify aplica CSP, HSTS, bloqueio de iframes, isolamento de origem, política de permissões e proteção contra MIME sniffing.
 - Dados de cartão nunca passam por este sistema.
-- A documentação pública da InfinitePay não descreve assinatura/segredo de webhook. Assim, a validação disponível combina UUID imprevisível, pedido persistido e valor exato. Se a InfinitePay disponibilizar assinatura no painel/suporte, ela deve ser adicionada antes de tratar a integração como endurecida para produção.
+- A documentação pública da InfinitePay não descreve assinatura criptográfica própria. O segredo único de callback acrescenta autenticação ao canal, combinado com UUID imprevisível, pedido persistido e valor exato. Se a InfinitePay disponibilizar uma assinatura oficial, ela deve substituir ou complementar esse mecanismo.
 - Netlify Blobs é adequado ao MVP. Para operação com estoque, expedição, auditoria e alto volume, migre pedidos para um banco transacional e processe efeitos posteriores por fila.
+- Netlify Blobs não oferece transações nem bloqueios atômicos. A combinação de segredo por callback, confirmação na InfinitePay e reivindicação de transação reduz replay no MVP, mas um banco transacional com restrição `UNIQUE(transaction_nsu)` é o próximo passo para garantias fortes sob concorrência hostil.
 - A resposta do webhook inclui a gravação no Blob. Monitore a duração na Netlify; se ela se aproximar de um segundo, adote banco de baixa latência/filas conforme os recursos oferecidos pela conta.
 
 Referência: [Checkout Integrado da InfinitePay](https://ajuda.infinitepay.io/pt-BR/articles/10766888-como-usar-o-checkout-integrado-da-infinitepay).

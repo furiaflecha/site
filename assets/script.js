@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const checkoutBtn = document.querySelector('#btn-checkout');
   const checkoutMessage = document.querySelector('#checkout-message');
   const cart = new Map();
+  let checkoutAttemptId = null;
 
   function formatBRL(value) {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addItemToCart(productId, name, price, size, qty) {
+    checkoutAttemptId = null;
     const key = productId + '-' + size;
     const existing = cart.get(key);
     if (existing) {
@@ -86,10 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (checkoutMessage) checkoutMessage.textContent = '';
 
       try {
+        checkoutAttemptId ||= crypto.randomUUID();
         const response = await fetch('/.netlify/functions/create-order', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
+            attempt_id: checkoutAttemptId,
             items: Array.from(cart.values(), item => ({
               productId: item.productId,
               size: item.size,
@@ -97,12 +101,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }))
           })
         });
-        const result = await response.json();
+        const result = await response.json().catch(() => ({
+          error: response.status === 429
+            ? 'Muitas tentativas. Aguarde um minuto e tente novamente.'
+            : 'O serviço de checkout respondeu de forma inesperada.'
+        }));
         if (!response.ok || !result.checkout_url) {
           throw new Error(result.error || 'Não foi possível iniciar o pagamento.');
         }
         window.location.assign(result.checkout_url);
       } catch (error) {
+        checkoutAttemptId = null;
         checkoutBtn.textContent = 'Finalizar Compra';
         checkoutBtn.disabled = false;
         if (checkoutMessage) checkoutMessage.textContent = error.message;

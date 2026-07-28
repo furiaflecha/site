@@ -1,13 +1,16 @@
 import { json, methodNotAllowed, readJson } from './lib/http.mjs';
 import { getOrder, patchOrder } from './lib/orders.mjs';
 import { checkPayment } from './lib/infinitepay.mjs';
+import { rejectCrossSite } from './lib/security.mjs';
+import { claimTransaction } from './lib/claims.mjs';
 
-export default async (request) => {
+export default async (request, context) => {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
+  if (rejectCrossSite(request)) return json({ error: 'Origem não autorizada.' }, 403);
 
   let body;
   try {
-    body = await readJson(request);
+    body = await readJson(request, 4_096);
   } catch (error) {
     return json({ error: error.message }, 400);
   }
@@ -30,6 +33,9 @@ export default async (request) => {
       return json({ error: 'Valor confirmado diverge do pedido.' }, 409);
     }
     if (paid) {
+      if (!await claimTransaction(transactionNsu, orderNsu)) {
+        return json({ error: 'Transação já vinculada a outro pedido.' }, 409);
+      }
       await patchOrder(orderNsu, {
         status: 'pago',
         transaction_nsu: transactionNsu,
@@ -44,5 +50,14 @@ export default async (request) => {
   } catch (error) {
     console.error('payment-check:', error.message);
     return json({ error: 'Não foi possível consultar o pagamento.' }, 502);
+  }
+};
+
+export const config = {
+  path: '/.netlify/functions/payment-check',
+  rateLimit: {
+    windowLimit: 30,
+    windowSize: 60,
+    aggregateBy: ['ip', 'domain']
   }
 };

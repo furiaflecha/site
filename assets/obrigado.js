@@ -90,9 +90,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    const response = await fetch(`/.netlify/functions/order-status?order_nsu=${encodeURIComponent(orderNsu)}`);
-    const order = await response.json();
-    if (!response.ok) throw new Error(order.error);
+    let order;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (attempt > 0) await new Promise(resolve => setTimeout(resolve, 1500 * attempt));
+      const response = await fetch(`/.netlify/functions/order-status?order_nsu=${encodeURIComponent(orderNsu)}`);
+      order = await response.json().catch(() => null);
+      if (response.ok && order) {
+        if (order.status === 'pago' || attempt === 2) break;
+      } else if (response.status !== 429) {
+        throw new Error(order?.error || 'Falha ao consultar o pedido.');
+      }
+    }
+    if (!order) throw new Error('Status indisponível.');
     render(order.status, order.receipt_url, order.items);
   } catch (_) {
     render('pendente', null);
