@@ -23,7 +23,6 @@ export default async (request, context) => {
 };
 
 export const config = {
-  path: '/.netlify/functions/order-status',
   rateLimit: {
     windowLimit: 120,
     windowSize: 60,

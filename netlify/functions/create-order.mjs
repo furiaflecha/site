@@ -78,7 +78,6 @@ export default async (request, context) => {
 };
 
 export const config = {
-  path: '/.netlify/functions/create-order',
   rateLimit: {
     windowLimit: 12,
     windowSize: 60,
