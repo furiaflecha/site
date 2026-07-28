@@ -10,6 +10,11 @@ export default async (request) => {
     order_nsu: order.order_nsu,
     status: order.status,
     total: order.total,
+    items: order.items.map(({ productId, size, quantity }) => ({
+      productId,
+      size,
+      quantity
+    })),
     receipt_url: order.receipt_url,
     updated_at: order.updated_at
   });

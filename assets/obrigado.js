@@ -16,7 +16,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  function render(status, receiptUrl) {
+  function whatsappUrl(items) {
+    const modelNames = {
+      vaiflecha: 'Vai Flecha! 2026',
+      torcida: 'Torcida Fúria Flecha 2026'
+    };
+    const models = [...new Set((items || []).map(item => modelNames[item.productId]).filter(Boolean))];
+    const modelText = models.length > 1
+      ? models.slice(0, -1).join(', ') + ' e ' + models.at(-1)
+      : (models[0] || 'da camisa');
+    const message = models.length > 1
+      ? `Olá, comprei os modelos ${modelText} da camisa da Fúria Flecha. Vamos combinar o frete?`
+      : `Olá, comprei o modelo ${modelText} da camisa da Fúria Flecha. Vamos combinar o frete?`;
+    return `https://wa.me/5511987484872?text=${encodeURIComponent(message)}`;
+  }
+
+  function render(status, receiptUrl, items = []) {
     resultEl.textContent = '';
     const title = document.createElement('h2');
     const message = document.createElement('p');
@@ -39,6 +54,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       link.rel = 'noopener noreferrer';
       link.textContent = 'Ver comprovante';
       resultEl.appendChild(link);
+    }
+    if (status === 'pago') {
+      const whatsapp = document.createElement('a');
+      whatsapp.className = 'btn btn-primary';
+      whatsapp.href = whatsappUrl(items);
+      whatsapp.target = '_blank';
+      whatsapp.rel = 'noopener noreferrer';
+      whatsapp.textContent = 'Combinar frete pelo WhatsApp';
+      resultEl.appendChild(whatsapp);
     }
     const back = document.createElement('a');
     back.className = 'btn btn-outline-light';
@@ -69,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const response = await fetch(`/.netlify/functions/order-status?order_nsu=${encodeURIComponent(orderNsu)}`);
     const order = await response.json();
     if (!response.ok) throw new Error(order.error);
-    render(order.status, order.receipt_url);
+    render(order.status, order.receipt_url, order.items);
   } catch (_) {
     render('pendente', null);
   }
