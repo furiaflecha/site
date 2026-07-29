@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const message = models.length > 1
       ? `Olá, comprei os modelos ${modelText} da camisa da Fúria Flecha. Vamos combinar o frete?`
       : `Olá, comprei o modelo ${modelText} da camisa da Fúria Flecha. Vamos combinar o frete?`;
-    return `https://wa.me/5511987484872?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/5511947002512?text=${encodeURIComponent(message)}`;
   }
 
   function render(status, receiptUrl, items = []) {
