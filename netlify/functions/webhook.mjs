@@ -2,6 +2,7 @@ import { json, methodNotAllowed, readJson } from './lib/http.mjs';
 import { getOrder, patchOrder } from './lib/orders.mjs';
 import { secureEqualHash } from './lib/security.mjs';
 import { claimTransaction } from './lib/claims.mjs';
+import { sendOrderPaidEmail } from './lib/email.mjs';
 
 export default async (request) => {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
@@ -32,7 +33,7 @@ export default async (request) => {
   }
 
   if (order.status !== 'pago') {
-    await patchOrder(order.order_nsu, {
+    const updatedOrder = await patchOrder(order.order_nsu, {
       status: 'pago',
       transaction_nsu: String(payload.transaction_nsu),
       invoice_slug: payload.invoice_slug || null,
@@ -42,6 +43,7 @@ export default async (request) => {
       capture_method: payload.capture_method,
       paid_at: new Date().toISOString()
     });
+    await sendOrderPaidEmail(updatedOrder);
   }
 
   return json({ success: true, message: null });

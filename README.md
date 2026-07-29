@@ -33,8 +33,17 @@ Configure em **Site configuration → Environment variables**:
 - `INFINITEPAY_HANDLE`: InfiniteTag sem `$` (secreta no backend).
 - `PUBLIC_SITE_URL`: URL HTTPS canônica; opcional quando a variável automática `URL` corresponde ao domínio desejado.
 - `INFINITEPAY_API_URL`: opcional; por padrão `https://api.checkout.infinitepay.io`. Só altere se a InfinitePay fornecer oficialmente outro ambiente.
+- `RESEND_API_KEY`, `ORDER_NOTIFICATION_EMAIL`, `ORDER_NOTIFICATION_FROM`: opcionais, habilitam o aviso por e-mail ao admin quando um pedido é pago (ver seção abaixo). `ORDER_NOTIFICATION_EMAIL` aceita múltiplos endereços separados por vírgula.
 
 Não existe token adicional no fluxo público documentado. `.env` é ignorado pelo Git e o handle não aparece no HTML ou JavaScript do navegador.
+
+## Notificação de pedido pago por e-mail
+
+Quando um pedido é confirmado como pago (pelo webhook da InfinitePay ou pelo fallback de `payment-check`), o backend tenta enviar um e-mail via [Resend](https://resend.com) para os endereços em `ORDER_NOTIFICATION_EMAIL`, com o remetente `ORDER_NOTIFICATION_FROM` (precisa ser um domínio verificado na conta Resend). O e-mail traz itens, total, transação, parcelas, forma de captura e link do comprovante quando disponível.
+
+Este envio é **interno para o admin**, não um recibo para o cliente — o site não coleta e-mail/telefone do comprador, já que o contato pós-compra é feito pelo próprio cliente via WhatsApp.
+
+O envio é best-effort: se `RESEND_API_KEY`, `ORDER_NOTIFICATION_EMAIL` ou `ORDER_NOTIFICATION_FROM` não estiverem configurados, ou se a chamada à Resend falhar, o erro é apenas registrado no log da função — a confirmação do pagamento nunca é bloqueada por causa do e-mail.
 
 ## Deploy e teste seguro
 

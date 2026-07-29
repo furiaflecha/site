@@ -3,6 +3,7 @@ import { getOrder, patchOrder } from './lib/orders.mjs';
 import { checkPayment } from './lib/infinitepay.mjs';
 import { rejectCrossSite } from './lib/security.mjs';
 import { claimTransaction } from './lib/claims.mjs';
+import { sendOrderPaidEmail } from './lib/email.mjs';
 
 export default async (request, context) => {
   if (request.method !== 'POST') return methodNotAllowed(['POST']);
@@ -36,7 +37,7 @@ export default async (request, context) => {
       if (!await claimTransaction(transactionNsu, orderNsu)) {
         return json({ error: 'Transação já vinculada a outro pedido.' }, 409);
       }
-      await patchOrder(orderNsu, {
+      const updatedOrder = await patchOrder(orderNsu, {
         status: 'pago',
         transaction_nsu: transactionNsu,
         invoice_slug: slug,
@@ -45,6 +46,7 @@ export default async (request, context) => {
         capture_method: result.capture_method,
         paid_at: new Date().toISOString()
       });
+      await sendOrderPaidEmail(updatedOrder);
     }
     return json({ paid, status: paid ? 'pago' : order.status });
   } catch (error) {
