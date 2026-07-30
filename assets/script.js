@@ -34,14 +34,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartTotalEl = document.querySelector('#cart-total-value');
   const checkoutBtn = document.querySelector('#btn-checkout');
   const checkoutMessage = document.querySelector('#checkout-message');
+  const cartFab = document.querySelector('#cart-fab');
+  const cartFabBadge = document.querySelector('#cart-fab-badge');
   const cart = new Map();
   let checkoutAttemptId = null;
+
+  if (cartFab && checkoutBtn) {
+    cartFab.addEventListener('click', () => {
+      checkoutBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  if (cartItemsEl) {
+    cartItemsEl.addEventListener('click', (e) => {
+      const minus = e.target.closest('[data-cart-qty-minus]');
+      const plus = e.target.closest('[data-cart-qty-plus]');
+      if (minus) changeCartQty(minus.dataset.key, -1);
+      else if (plus) changeCartQty(plus.dataset.key, 1);
+    });
+  }
 
   function formatBRL(value) {
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
   function renderCart() {
+    let totalQty = 0;
+    cart.forEach(item => totalQty += item.qty);
+    if (cartFab) cartFab.hidden = totalQty === 0;
+    if (cartFabBadge) cartFabBadge.textContent = totalQty;
+
     if (!cartItemsEl || !cartTotalEl) return;
 
     if (cart.size === 0) {
@@ -53,14 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let total = 0;
     cartItemsEl.innerHTML = '';
-    cart.forEach(item => {
+    cart.forEach((item, key) => {
       const subtotal = item.price * item.qty;
       total += subtotal;
       const line = document.createElement('div');
       line.className = 'cart-line';
       line.innerHTML =
         '<div><div class="cart-line-name">' + item.name + '</div>' +
-        '<div class="cart-line-meta">Tamanho ' + item.size + ' · Qtd. ' + item.qty + '</div></div>' +
+        '<div class="cart-line-meta">Tamanho ' + item.size + ' · Qtd. ' +
+        '<span class="cart-line-qty">' +
+        '<button type="button" data-cart-qty-minus data-key="' + key + '" aria-label="Diminuir quantidade de ' + item.name + '">−</button>' +
+        '<span>' + item.qty + '</span>' +
+        '<button type="button" data-cart-qty-plus data-key="' + key + '" aria-label="Aumentar quantidade de ' + item.name + '">+</button>' +
+        '</span></div></div>' +
         '<div class="cart-line-price">' + formatBRL(subtotal) + '</div>';
       cartItemsEl.appendChild(line);
     });
@@ -77,6 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       cart.set(key, { productId, name, price, size, qty });
     }
+    renderCart();
+  }
+
+  function changeCartQty(key, delta) {
+    const item = cart.get(key);
+    if (!item) return;
+    const nextQty = item.qty + delta;
+    if (nextQty <= 0) {
+      cart.delete(key);
+    } else {
+      item.qty = Math.min(10, nextQty);
+    }
+    checkoutAttemptId = null;
     renderCart();
   }
 

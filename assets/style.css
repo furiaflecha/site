@@ -707,6 +707,31 @@ ul{ margin: 0; padding: 0; list-style: none; }
 .cart-line-meta{ color: var(--muted-on-light); font-size: 0.85rem; }
 .cart-line-price{ font-weight: 700; white-space: nowrap; }
 
+.cart-line-qty{
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--paper-dim);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.cart-line-qty button{
+  width: 26px; height: 26px;
+  border: none;
+  background: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+.cart-line-qty button:hover{ background: var(--paper-dim); }
+.cart-line-qty span{
+  width: 26px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
 .cart-total{
   display: flex;
   justify-content: space-between;
@@ -910,6 +935,44 @@ ul{ margin: 0; padding: 0; list-style: none; }
   z-index: 50;
 }
 .whatsapp-fab svg{ width: 28px; height: 28px; }
+
+/* ---------- Carrinho flutuante (loja) ---------- */
+.cart-fab{
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--orange-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px -6px rgba(251, 122, 42, 0.55);
+  cursor: pointer;
+  z-index: 50;
+}
+.cart-fab:hover{ background: var(--orange-600); }
+.cart-fab[hidden]{ display: none; }
+.cart-fab svg{ width: 26px; height: 26px; }
+.cart-fab-badge{
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--navy-900);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--paper);
+}
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 900px){
