@@ -919,6 +919,24 @@ ul{ margin: 0; padding: 0; list-style: none; }
   font-size: 0.82rem;
 }
 
+/* ---------- Loader de página ---------- */
+.page-loader{
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy-900);
+  transition: opacity .3s ease, visibility .3s ease;
+}
+.page-loader-rings{ width: 84px; height: 84px; }
+.page-loader.is-hidden{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* ---------- WhatsApp flutuante ---------- */
 .whatsapp-fab{
   position: fixed;

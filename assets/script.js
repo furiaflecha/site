@@ -2,6 +2,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Loader de página — some assim que a página termina de carregar (imagens inclusas)
+  const pageLoader = document.querySelector('#page-loader');
+  if (pageLoader) {
+    const hideLoader = () => {
+      pageLoader.classList.add('is-hidden');
+      pageLoader.addEventListener('transitionend', () => pageLoader.remove(), { once: true });
+    };
+    if (document.readyState === 'complete') hideLoader();
+    else window.addEventListener('load', hideLoader);
+  }
+
   // Menu mobile
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.main-nav');
